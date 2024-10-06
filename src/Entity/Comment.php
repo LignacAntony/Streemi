@@ -26,7 +26,7 @@ class Comment
     private ?Media $media = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?self $parentComment = null;
 
     /**

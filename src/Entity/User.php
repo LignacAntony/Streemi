@@ -56,12 +56,19 @@ class User
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'userComment')]
     private Collection $comments;
 
+    /**
+     * @var Collection<int, WatchHistory>
+     */
+    #[ORM\OneToMany(targetEntity: WatchHistory::class, mappedBy: 'userWatchHistory')]
+    private Collection $watchHistories;
+
     public function __construct()
     {
         $this->subscriptionHistories = new ArrayCollection();
         $this->playlists = new ArrayCollection();
         $this->playlistSubscriptions = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->watchHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -243,6 +250,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($comment->getUserComment() === $this) {
                 $comment->setUserComment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WatchHistory>
+     */
+    public function getWatchHistories(): Collection
+    {
+        return $this->watchHistories;
+    }
+
+    public function addMedium(WatchHistory $medium): static
+    {
+        if (!$this->watchHistories->contains($medium)) {
+            $this->watchHistories->add($medium);
+            $medium->setUserWatchHistory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedium(WatchHistory $medium): static
+    {
+        if ($this->watchHistories->removeElement($medium)) {
+            // set the owning side to null (unless already changed)
+            if ($medium->getUserWatchHistory() === $this) {
+                $medium->setUserWatchHistory(null);
             }
         }
 

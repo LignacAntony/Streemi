@@ -35,6 +35,9 @@ class Playlist
     #[ORM\OneToMany(targetEntity: PlaylistSubscription::class, mappedBy: 'playlist')]
     private Collection $playlistSubscriptions;
 
+    #[ORM\OneToOne(mappedBy: 'playlist', cascade: ['persist', 'remove'])]
+    private ?PlaylistMedia $playlistMedia = null;
+
     public function __construct()
     {
         $this->playlistSubscriptions = new ArrayCollection();
@@ -119,6 +122,23 @@ class Playlist
                 $playlistSubscription->setPlaylist(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPlaylistMedia(): ?PlaylistMedia
+    {
+        return $this->playlistMedia;
+    }
+
+    public function setPlaylistMedia(PlaylistMedia $playlistMedia): static
+    {
+        // set the owning side of the relation if necessary
+        if ($playlistMedia->getPlaylist() !== $this) {
+            $playlistMedia->setPlaylist($this);
+        }
+
+        $this->playlistMedia = $playlistMedia;
 
         return $this;
     }
