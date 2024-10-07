@@ -26,7 +26,7 @@ class Comment
     private ?Media $media = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'comments')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: true, referencedColumnName: "id", onDelete: "CASCADE")]
     private ?self $parentComment = null;
 
     /**
@@ -139,5 +139,18 @@ class Comment
         $this->statusEnum = $statusEnum;
 
         return $this;
+    }
+
+    public function isPendingStatus(): string
+    {
+        if ($this->statusEnum === CommentStatusEnum::PENDING) {
+            return 'pending';
+        }
+        return 'not pending';
+    }
+
+    public function test(): string
+    {
+        return $this->statusEnum->value;
     }
 }

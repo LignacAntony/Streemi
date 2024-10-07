@@ -26,23 +26,64 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $subscription1 = new Subscription();
-        $subscription1->setName('Basic');
-        $subscription1->setPrice(30);
-        $subscription1->setDurationInMonth(6);
-        $manager->persist($subscription1);
+        $subscriptions = [
+            ['name' => 'Basic', 'price' => 30, 'duration' => 6],
+            ['name' => 'Premium', 'price' => 50, 'duration' => 12],
+            ['name' => 'VIP', 'price' => 90, 'duration' => 24],
+        ];
 
-        $subscription2 = new Subscription();
-        $subscription2->setName('Premium');
-        $subscription2->setPrice(50);
-        $subscription2->setDurationInMonth(12);
-        $manager->persist($subscription2);
+        foreach ($subscriptions as $index => $subData) {
+            $subscription = new Subscription();
+            $subscription->setName($subData['name']);
+            $subscription->setPrice($subData['price']);
+            $subscription->setDurationInMonth($subData['duration']);
+            $manager->persist($subscription);
+            $this->addReference('subscription_' . $index, $subscription);
+        }
+        $category1 = new Category();
+        $category1->setName('Action');
+        $category1->setLabel('Action');
+        $manager->persist($category1);
 
-        $subscription3 = new Subscription();
-        $subscription3->setName('VIP');
-        $subscription3->setPrice(90);
-        $subscription3->setDurationInMonth(24);
-        $manager->persist($subscription3);
+        $category2 = new Category();
+        $category2->setName('Adventure');
+        $category2->setLabel('Adventure');
+        $manager->persist($category2);
+
+        $category3 = new Category();
+        $category3->setName('Comedy');
+        $category3->setLabel('Comedy');
+        $manager->persist($category3);
+
+        $category4 = new Category();
+        $category4->setName('Crime');
+        $category4->setLabel('Crime');
+        $manager->persist($category4);
+
+        $category5 = new Category();
+        $category5->setName('Drama');
+        $category5->setLabel('Drama');
+        $manager->persist($category5);
+
+        $category6 = new Category();
+        $category6->setName('Fantasy');
+        $category6->setLabel('Fantasy');
+        $manager->persist($category6);
+
+        $language1 = new Language();
+        $language1->setName('English');
+        $language1->setCode('en');
+        $manager->persist($language1);
+
+        $language2 = new Language();
+        $language2->setName('French');
+        $language2->setCode('fr');
+        $manager->persist($language2);
+
+        $language3 = new Language();
+        $language3->setName('Spanish');
+        $language3->setCode('es');
+        $manager->persist($language3);
 
         $film1 = new Movie();
         $film1->setMediaType(MediaTypeEnum::MOVIE);
@@ -50,9 +91,28 @@ class AppFixtures extends Fixture
         $film1->setShortDescription('The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.');
         $film1->setLongDescription('The Godfather "Don" Vito Corleone is the head of the Corleone mafia family in New York. He is at the event of his daughter\'s wedding. Michael, Vito\'s youngest son and a decorated WWII Marine is also present at the wedding. Michael seems to be uninterested in being a part of the family business. Vito is a powerful man, and is kind to all those who give him respect but is ruthless against those who do not. But when a powerful and treacherous rival wants to sell drugs and needs the Don\'s influence for the same, Vito refuses to do it. What follows is a clash between Vito\'s fading old values and the new ways which may cause Michael to do the thing he was most reluctant in doing and wage a mob war against all the other mafia families which could tear the Corleone family apart.');
         $film1->setReleasedDateAt(new \DateTime('1972-03-24'));
-        $film1->setCoverImage('https://www.imdb.com/title/tt0068646/mediaviewer/rm10105600/');
-        $film1->setStaff(['Director' => 'Francis Ford Coppola', 'Writer' => 'Mario Puzo', 'Producer' => 'Albert S. Ruddy']);
-        $film1->setCasting(['Marlon Brando', 'Al Pacino', 'James Caan', 'Richard S. Castellano', 'Robert Duvall', 'Sterling Hayden', 'John Marley', 'Richard Conte', 'Al Lettieri', 'Diane Keaton']);
+        $film1->setCoverImage('https://communist.red/wp-content/uploads/2022/08/godfather.png.webp');
+        $film1->setStaff([
+            'Director' => ['name' => 'Francis Ford Coppola', 'photo' => 'https://img-4.linternaute.com/Irzs1MQwmac-88sLIBwEclZ2aHg=/1500x/smart/16a504f76f2549bb846c68fd00d8f5c1/ccmcms-linternaute/23801388.jpg'],
+            'Writer' => ['name' => 'Mario Puzo', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/4/48/Mario_Puzo_1972_%28cropped%29.jpg'],
+            'Producer' => ['name' => 'Albert S. Ruddy', 'photo' => 'https://9b16f79ca967fd0708d1-2713572fef44aa49ec323e813b06d2d9.ssl.cf2.rackcdn.com/1140x_a10-7_cTC/Obit-Albert-Ruddy-1-1716925170.jpg']
+        ]);
+        $film1->setCasting([
+            ['name' => 'Marlon Brando', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/5/53/Marlon_Brando_publicity_for_One-Eyed_Jacks.png'],
+            ['name' => 'Al Pacino', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/3/3e/Al_Pacino_2016_%2830401544240%29.jpg'],
+            ['name' => 'James Caan', 'photo' => 'https://images.mubicdn.net/images/cast_member/4960/cache-645-1376242422/image-w856.jpg'],
+            ['name' => 'Richard S. Castellano', 'photo' => 'https://fr.web.img6.acsta.net/pictures/19/09/24/19/54/5682825.jpg'],
+            ['name' => 'Robert Duvall', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/e/ea/Robert_Duvall_2_by_David_Shankbone_%28cropped%29.jpg'],
+            ['name' => 'Sterling Hayden', 'photo' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIlwqJnHD9X-yWGFQGjq2ILIg2mJnnWXJ6sw&s'],
+            ['name' => 'John Marley', 'photo' => 'https://images.mubicdn.net/images/cast_member/10181/cache-655-1478101707/image-w856.jpg'],
+            ['name' => 'Richard Conte', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/b/b0/Richard_Conte_1945.JPG'],
+            ['name' => 'Al Lettieri', 'photo' => 'https://media.themoviedb.org/t/p/w500/fE5mEWPkkVJlCji0EoKht8PYw89.jpg'],
+            ['name' => 'Diane Keaton', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Diane_Keaton_2012-1_%28cropped%29.jpg/640px-Diane_Keaton_2012-1_%28cropped%29.jpg']
+        ]);
+        $film1->addCategory($category4);
+        $film1->addCategory($category5);
+        $film1->addLanguage($language1);
+        $film1->addLanguage($language2);
         $manager->persist($film1);
 
         $film2 = new Movie();
@@ -61,9 +121,25 @@ class AppFixtures extends Fixture
         $film2->setShortDescription('Two imprisoned');
         $film2->setLongDescription('A banker convicted of uxoricide forms a friendship over a quarter century with a hardened convict, while maintaining his innocence and trying to remain hopeful through simple compassion.');
         $film2->setReleasedDateAt(new \DateTime('1994-09-23'));
-        $film2->setCoverImage('https://www.imdb.com/title/tt0111161/mediaviewer/rm10105600/');
-        $film2->setStaff(['Director' => 'Frank Darabont', 'Writer' => 'Stephen King', 'Producer' => 'Niki Marvin']);
-        $film2->setCasting(['Tim Robbins', 'Morgan Freeman', 'Bob Gunton', 'William Sadler', 'Clancy Brown', 'Gil Bellows', 'Mark Rolston', 'James Whitmore', 'Jeffrey DeMunn', 'Larry Brandenburg']);
+        $film2->setCoverImage('https://www.cinematheque.qc.ca/cdn-cgi/image/format=auto/workspace/uploads/projections/grm_shawshank_banner-fr-1708112598.jpeg');
+        $film2->setStaff([
+            'Director' => ['name' => 'Frank Darabont', 'photo' => 'https://img-4.linternaute.com/Gc5nFZmCNAWKdyc69K0ij8_9gyk=/1240x/smart/ab0a98b90cdc449c825e2c4ce7cc1127/ccmcms-linternaute/10161402-14-frank-darabont.jpg'],
+            'Writer' => ['name' => 'Stephen King', 'photo' => 'https://media.vanityfair.fr/photos/60d36a19054484c84ef3f8be/16:9/w_2560%2Cc_limit/vf_stephen_king_8343.jpeg'],
+            'Producer' => ['name' => 'Niki Marvin', 'photo' => 'https://images.mubicdn.net/images/cast_member/23718/cache-209048-1489646455/image-w856.jpg']
+        ]);
+        $film2->setCasting([
+            ['name' => 'Tim Robbins', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/9/96/TimRobbins08TIFF.jpg'],
+            ['name' => 'Morgan Freeman', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/e/e4/Morgan_Freeman_Deauville_2018.jpg'],
+            ['name' => 'Bob Gunton', 'photo' => 'https://images.mubicdn.net/images/cast_member/23719/cache-70952-1360854490/image-w856.jpg'],
+            ['name' => 'William Sadler', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/William_Sadler_2019.jpg/800px-William_Sadler_2019.jpg'],
+            ['name' => 'Clancy Brown', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Clancy_Brown_by_Gage_Skidmore.jpg/1200px-Clancy_Brown_by_Gage_Skidmore.jpg'],
+            ['name' => 'Gil Bellows', 'photo' => 'https://resize-elle.ladmedia.fr/rcrop/638,,forcex/img/var/plain_site/storage/images/loisirs/series/ally-mcbeal/gil-bellows-aujourd-hui/53999858-1-fre-FR/Gil-Bellows-aujourd-hui.jpg'],
+            ['name' => 'Mark Rolston', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/9/97/Mark_Rolston_Comic_Con_2023_%28cropped%29.jpg']
+        ]);
+        $film2->addCategory($category5);
+        $film2->addCategory($category6);
+        $film2->addLanguage($language1);
+        $film2->addLanguage($language2);
         $manager->persist($film2);
 
         $serie1 = new Serie();
@@ -72,9 +148,27 @@ class AppFixtures extends Fixture
         $serie1->setShortDescription('A high school chemistry teacher turned meth maker.');
         $serie1->setLongDescription('Walter White, a high school chemistry teacher, turned meth maker, teams up with a former student, Jesse Pinkman, to create and sell blue meth.');
         $serie1->setReleasedDateAt(new \DateTime('2008-01-20'));
-        $serie1->setCoverImage('https://www.imdb.com/title/tt0903747/mediaviewer/rm10105600/');
-        $serie1->setStaff(['Creator' => 'Vince Gilligan', 'Writer' => 'Vince Gilligan', 'Producer' => 'Vince Gilligan']);
-        $serie1->setCasting(['Bryan Cranston', 'Aaron Paul', 'Anna Gunn', 'Betsy Brandt', 'Dean Norris', 'RJ Mitte', 'Bob Odenkirk', 'Jonathan Banks', 'Giancarlo Esposito', 'Steven Michael Quezada']);
+        $serie1->setCoverImage('https://www.lorhkan.com/wp-content/uploads/2014/01/Breaking-Bad-2.jpg');
+        $serie1->setStaff([
+            'Creator and Writer' => ['name' => 'Vince Gilligan', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/e/e2/Vince_Gilligan_by_Gage_Skidmore_3.jpg'],
+            'Producer' => ['name' => 'Mark Johnson', 'photo' => 'https://static.wikia.nocookie.net/lemondededisney/images/2/20/Mark_Johnson.jpg/revision/latest?cb=20200411105018&path-prefix=fr'],
+        ]);
+        $serie1->setCasting([
+            ['name' => 'Bryan Cranston', 'photo' => 'https://lvdneng.rosselcdn.net/sites/default/files/dpistyles_v2/vdn_864w/2023/06/09/node_1338386/56282676/public/2023/06/09/B9734486000Z.1_20230609193750_000%2BGOLMU8QVH.1-0.jpg?itok=RwKTGxLN1686332276'],
+            ['name' => 'Aaron Paul', 'photo' => 'https://img.20mn.fr/cHk0PFJjQRS5XZ6WdQedZg/1444x920_acteur-americain-aaron-paul-premiere-film-exodus-8-decembre-2014'],
+            ['name' => 'Anna Gunn', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Anna_Gunn_by_Gage_Skidmore_3.jpg/800px-Anna_Gunn_by_Gage_Skidmore_3.jpg'],
+            ['name' => 'Betsy Brandt', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/8/80/Betsy_Brandt_by_Gage_Skidmore_2.jpg'],
+            ['name' => 'Dean Norris', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/b/bf/Dean_Norris_by_Gage_Skidmore_3.jpg'],
+            ['name' => 'RJ Mitte', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/RJ_Mitte_by_Gage_Skidmore.jpg/1200px-RJ_Mitte_by_Gage_Skidmore.jpg'],
+            ['name' => 'Bob Odenkirk', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Bob_Odenkirk_by_Gage_Skidmore_2.jpg/800px-Bob_Odenkirk_by_Gage_Skidmore_2.jpg'],
+            ['name' => 'Jonathan Banks', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Jonathan_Banks_by_Gage_Skidmore.jpg/1200px-Jonathan_Banks_by_Gage_Skidmore.jpg'],
+            ['name' => 'Giancarlo Esposito', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Giancarlo_Esposito_by_Gage_Skidmore_3.jpg/1200px-Giancarlo_Esposito_by_Gage_Skidmore_3.jpg'],
+            ['name' => 'Steven Michael Quezada', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Steven_Michael_Quezada_by_Gage_Skidmore.jpg/1200px-Steven_Michael_Quezada_by_Gage_Skidmore.jpg']
+        ]);
+        $serie1->addCategory($category4);
+        $serie1->addCategory($category2);
+        $serie1->addLanguage($language1);
+        $serie1->addLanguage($language3);
         $manager->persist($serie1);
 
         $season1 = new Season();
@@ -123,9 +217,28 @@ class AppFixtures extends Fixture
         $serie2->setShortDescription('Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.');
         $serie2->setLongDescription('In the mythical continent of Westeros, several powerful families fight for control of the Seven Kingdoms. As conflict erupts in the kingdoms of men, an ancient enemy rises once again to threaten them all. Meanwhile, the last heirs of a recently usurped dynasty plot to take back their homeland from across the Narrow Sea.');
         $serie2->setReleasedDateAt(new \DateTime('2011-04-17'));
-        $serie2->setCoverImage('https://www.imdb.com/title/tt0944947/mediaviewer/rm10105600/');
-        $serie2->setStaff(['Creator' => 'David Benioff', 'Writer' => 'David Benioff', 'Producer' => 'David Benioff']);
-        $serie2->setCasting(['Emilia Clarke', 'Peter Dinklage', 'Kit Harington', 'Lena Headey', 'Sophie Turner', 'Maisie Williams', 'Nikolaj Coster-Waldau', 'Iain Glen', 'Alfie Allen', 'John Bradley']);
+        $serie2->setCoverImage('https://www.usatoday.com/gcdn/presto/2019/05/20/USAT/f44641fc-5482-4553-ba82-5f105f052391-AP_Game_of_Thrones_Economics_Confidence_Matters.JPG');
+        $serie2->setStaff([
+            'Creator' => ['name' => 'David Benioff', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/David_Benioff_by_Gage_Skidmore.jpg/440px-David_Benioff_by_Gage_Skidmore.jpg'],
+            'Writer' => ['name' => 'George R. R. Martin', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/George_R._R._Martin_by_Gage_Skidmore_2.jpg/1200px-George_R._R._Martin_by_Gage_Skidmore_2.jpg'],
+            'Producer' => ['name' => 'David Benioff', 'photo' => 'https://images.mubicdn.net/images/cast_member/17009/cache-242884-1501551087/image-w856.jpg']
+        ]);
+        $serie2->setCasting([
+            ['name' => 'Emilia Clarke', 'photo' => 'https://static.wikia.nocookie.net/marvelstudios/images/f/f9/Emilia_Clarke.jpg/revision/latest?cb=20211113110428&path-prefix=fr'],
+            ['name' => 'Peter Dinklage', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Peter_Dinklage-34.jpg/1200px-Peter_Dinklage-34.jpg'],
+            ['name' => 'Kit Harington', 'photo' => 'https://static.wikia.nocookie.net/game-of-thrones-le-trone-de-fer/images/3/34/Kit_Harington.png/revision/latest?cb=20161028115348&path-prefix=fr'],
+            ['name' => 'Lena Headey', 'photo' => 'https://fr.web.img6.acsta.net/pictures/17/07/13/11/36/018746.jpg'],
+            ['name' => 'Sophie Turner', 'photo' => 'https://media.vanityfair.com/photos/65244b0fa7e806ff0f80857d/master/pass/sophie-turner.jpg'],
+            ['name' => 'Maisie Williams', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Maisie_Williams_by_Gage_Skidmore_3.jpg'],
+            ['name' => 'Nikolaj Coster-Waldau', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/9/92/Nikolaj_Coster-Waldau-68363.jpg'],
+            ['name' => 'Iain Glen', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/5/57/Iain_Glen.jpg'],
+            ['name' => 'Alfie Allen', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Alfie_Allen_by_Gage_Skidmore_2.jpg/1200px-Alfie_Allen_by_Gage_Skidmore_2.jpg'],
+            ['name' => 'John Bradley', 'photo' => 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/John_Bradley_by_Gage_Skidmore_3.jpg/1200px-John_Bradley_by_Gage_Skidmore_3.jpg']
+        ]);
+        $serie2->addCategory($category1);
+        $serie2->addCategory($category2);
+        $serie2->addLanguage($language1);
+        $serie2->addLanguage($language2);
         $manager->persist($serie2);
 
         $season3 = new Season();
@@ -159,7 +272,8 @@ class AppFixtures extends Fixture
         $user1->setEmail('anto@exmple.com');
         $user1->setPassword('password');
         $user1->setAccountStatusEnum(AccountStatusEnum::ACTIVE);
-        $user1->setCurrentSubscribtion($subscription3);
+        $subscription = $this->getReference('subscription_2');
+        $user1->setCurrentSubscribtion($subscription);
         $manager->persist($user1);
 
         $user2 = new User();
@@ -167,7 +281,8 @@ class AppFixtures extends Fixture
         $user2->setEmail('john@exmple.com');
         $user2->setPassword('password');
         $user2->setAccountStatusEnum(AccountStatusEnum::ACTIVE);
-        $user2->setCurrentSubscribtion($subscription1);
+        $subscription = $this->getReference('subscription_0');
+        $user2->setCurrentSubscribtion($subscription);
         $manager->persist($user2);
 
         $user3 = new User();
@@ -175,71 +290,30 @@ class AppFixtures extends Fixture
         $user3->setEmail('jane@exemple.com');
         $user3->setPassword('password');
         $user3->setAccountStatusEnum(AccountStatusEnum::ACTIVE);
-        $user3->setCurrentSubscribtion($subscription2);
+        $subscription = $this->getReference('subscription_1');
+        $user3->setCurrentSubscribtion($subscription);
         $manager->persist($user3);
-
-        $category1 = new Category();
-        $category1->setName('Action');
-        $category1->setLabel('Action');
-        $manager->persist($category1);
-
-        $category2 = new Category();
-        $category2->setName('Adventure');
-        $category2->setLabel('Adventure');
-        $manager->persist($category2);
-
-        $category3 = new Category();
-        $category3->setName('Comedy');
-        $category3->setLabel('Comedy');
-        $manager->persist($category3);
-
-        $category4 = new Category();
-        $category4->setName('Crime');
-        $category4->setLabel('Crime');
-        $manager->persist($category4);
-
-        $category5 = new Category();
-        $category5->setName('Drama');
-        $category5->setLabel('Drama');
-        $manager->persist($category5);
-
-        $category6 = new Category();
-        $category6->setName('Fantasy');
-        $category6->setLabel('Fantasy');
-        $manager->persist($category6);
-
-        $language1 = new Language();
-        $language1->setName('English');
-        $language1->setCode('en');
-        $manager->persist($language1);
-
-        $language2 = new Language();
-        $language2->setName('French');
-        $language2->setCode('fr');
-        $manager->persist($language2);
-
-        $language3 = new Language();
-        $language3->setName('Spanish');
-        $language3->setCode('es');
-        $manager->persist($language3);
 
         $subscriptionHistory1 = new SubscriptionHistory();
         $subscriptionHistory1->setSubscriber($user1);
-        $subscriptionHistory1->setSubscription($subscription3);
+        $subscription = $this->getReference('subscription_2');
+        $subscriptionHistory1->setSubscription($subscription);
         $subscriptionHistory1->setStartDateAt(new \DateTime('2021-01-01'));
         $subscriptionHistory1->setEndDateAt(new \DateTime('2023-01-01'));
         $manager->persist($subscriptionHistory1);
 
         $subscriptionHistory2 = new SubscriptionHistory();
         $subscriptionHistory2->setSubscriber($user2);
-        $subscriptionHistory2->setSubscription($subscription1);
+        $subscription = $this->getReference('subscription_0');
+        $subscriptionHistory2->setSubscription($subscription);
         $subscriptionHistory2->setStartDateAt(new \DateTime('2021-01-01'));
         $subscriptionHistory2->setEndDateAt(new \DateTime('2021-07-01'));
         $manager->persist($subscriptionHistory2);
 
         $subscriptionHistory3 = new SubscriptionHistory();
         $subscriptionHistory3->setSubscriber($user3);
-        $subscriptionHistory3->setSubscription($subscription2);
+        $subscription = $this->getReference('subscription_1');
+        $subscriptionHistory3->setSubscription($subscription);
         $subscriptionHistory3->setStartDateAt(new \DateTime('2021-01-01'));
         $subscriptionHistory3->setEndDateAt(new \DateTime('2022-01-01'));
         $manager->persist($subscriptionHistory3);
