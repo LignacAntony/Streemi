@@ -4,48 +4,59 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Media;
-use App\Entity\Movie;
+use App\Repository\CategoryRepository;
+use App\Repository\MovieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class MovieController extends AbstractController
 {
-    #[Route('/category', name: 'Category page', methods: ['GET'])]
-    public function __invoke(): Response
+    #[Route('/category/{id}', name: 'category_page', methods: ['GET'])]
+    public function category(Category $category): Response
     {
-        return $this->render(view: 'movie/category.html.twig');
+        return $this->render('movie/category.html.twig', [
+            'category' => $category
+        ]);
     }
 
-    #[Route('/default', name: 'Default page', methods: ['GET'])]
+    #[Route('/default', name: 'default_page', methods: ['GET'])]
     public function default(): Response
     {
         return $this->render(view: 'movie/default.html.twig');
     }
 
-    #[Route('/movie/detail/{id}', name: 'Movie detail page', methods: ['GET'])]
+    #[Route('/movie/detail/{id}', name: 'movie_detail', methods: ['GET'])]
     public function detailmovie(Media $media): Response
     {
         return $this->render(view: 'movie/detail.html.twig', parameters: ['media' => $media]);
     }
 
-    #[Route('serie/{name}', name: 'Serie detail page', methods: ['GET'])]
-    public function detailserie($name): Response
+    #[Route('serie/detail/{id}', name: 'serie_detail', methods: ['GET'])]
+    public function detailserie(Media $media): Response
     {
         // utilisier detail.html.twig mais ajouter la diff de detail_serie.html.twig
-        return $this->render(view: 'movie/detail_serie.html.twig', parameters: [$name]);
+        return $this->render(view: 'movie/detail.html.twig', parameters: ['media' => $media]);
     }
 
-    #[Route('discover', name: 'Discover page', methods: ['GET'])]
-    public function discover(): Response
+    #[Route('discover', name: 'discover_page', methods: ['GET'])]
+    public function discover(CategoryRepository $repository): Response
     {
-        return $this->render(view: 'movie/discover.html.twig');
+        return $this->render('movie/discover.html.twig', [
+            'categories' => $repository->findAll()
+        ]);
     }
 
-    #[Route('lists', name: 'Lists page', methods: ['GET'])]
-    public function lists(): Response
+    #[Route('lists', name: 'lists_page', methods: ['GET'])]
+    public function lists(CategoryRepository $repository): Response
     {
-        return $this->render(view: 'movie/lists.html.twig');
+        return $this->render(
+            'movie/lists.html.twig',
+            [
+                'categories' => $repository->findAll()
+            ]
+        );
     }
 }

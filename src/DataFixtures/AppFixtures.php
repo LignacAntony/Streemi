@@ -113,6 +113,7 @@ class AppFixtures extends Fixture
         $film1->addCategory($category5);
         $film1->addLanguage($language1);
         $film1->addLanguage($language2);
+        $film1->setDuration(175);
         $manager->persist($film1);
 
         $film2 = new Movie();
@@ -140,6 +141,7 @@ class AppFixtures extends Fixture
         $film2->addCategory($category6);
         $film2->addLanguage($language1);
         $film2->addLanguage($language2);
+        $film2->setDuration(142);
         $manager->persist($film2);
 
         $serie1 = new Serie();

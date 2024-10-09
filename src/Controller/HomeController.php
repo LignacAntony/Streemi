@@ -11,11 +11,14 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'Home page', methods: ['GET'])]
+    #[Route('/', name: 'home_page', methods: ['GET'])]
     public function __invoke(MediaRepository $mediaRepository): Response
     {
+        $lastWatched = $mediaRepository->findOneBy([], ['id' => 'DESC']);
+
         return $this->render('index.html.twig', [
             'medias' => $mediaRepository->findAll(),
+            'lastWatched' => $lastWatched,
         ]);
     }
 }
