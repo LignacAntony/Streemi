@@ -7,20 +7,13 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Media;
 use App\Repository\CategoryRepository;
-use App\Repository\MovieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MovieController extends AbstractController
 {
-    #[Route('/category/{id}', name: 'category_page', methods: ['GET'])]
-    public function category(Category $category): Response
-    {
-        return $this->render('movie/category.html.twig', [
-            'category' => $category
-        ]);
-    }
 
     #[Route('/default', name: 'default_page', methods: ['GET'])]
     public function default(): Response
@@ -41,17 +34,11 @@ class MovieController extends AbstractController
         return $this->render(view: 'movie/detail.html.twig', parameters: ['media' => $media]);
     }
 
-    #[Route('discover', name: 'discover_page', methods: ['GET'])]
-    public function discover(CategoryRepository $repository): Response
-    {
-        return $this->render('movie/discover.html.twig', [
-            'categories' => $repository->findAll()
-        ]);
-    }
-
+    #[IsGranted('ROLE_USER')]
     #[Route('lists', name: 'lists_page', methods: ['GET'])]
     public function lists(CategoryRepository $repository): Response
     {
+
         return $this->render(
             'movie/lists.html.twig',
             [

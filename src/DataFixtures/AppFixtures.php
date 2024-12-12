@@ -21,10 +21,16 @@ use App\Entity\WatchHistory;
 use App\Enum\AccountStatusEnum;
 use App\Enum\CommentStatusEnum;
 use App\Enum\MediaTypeEnum;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-    public function load(ObjectManager $manager): void
+    private UserPasswordHasherInterface $passwordHasher;
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+    public function load(ObjectManager $manager,): void
     {
         $subscriptions = [
             ['name' => 'Basic', 'price' => 30, 'duration' => 6],
@@ -37,6 +43,7 @@ class AppFixtures extends Fixture
             $subscription->setName($subData['name']);
             $subscription->setPrice($subData['price']);
             $subscription->setDurationInMonth($subData['duration']);
+            $subscription->setDescription('This is a ' . $subData['name'] . ' subscription');
             $manager->persist($subscription);
             $this->addReference('subscription_' . $index, $subscription);
         }
@@ -272,7 +279,13 @@ class AppFixtures extends Fixture
         $user1 = new User();
         $user1->setUsername('Anto');
         $user1->setEmail('anto@exmple.com');
-        $user1->setPassword('password');
+        $user1->setPassword(
+            $this->passwordHasher->hashPassword(
+                $user1,
+                "password"
+            )
+        );
+        $user1->setRoles(['ROLE_ADMIN']);
         $user1->setAccountStatusEnum(AccountStatusEnum::ACTIVE);
         $subscription = $this->getReference('subscription_2');
         $user1->setCurrentSubscribtion($subscription);
@@ -281,7 +294,13 @@ class AppFixtures extends Fixture
         $user2 = new User();
         $user2->setUsername('John');
         $user2->setEmail('john@exmple.com');
-        $user2->setPassword('password');
+        $user2->setPassword(
+            $this->passwordHasher->hashPassword(
+                $user1,
+                "password"
+            )
+        );
+        $user2->setRoles(['ROLE_USER']);
         $user2->setAccountStatusEnum(AccountStatusEnum::ACTIVE);
         $subscription = $this->getReference('subscription_0');
         $user2->setCurrentSubscribtion($subscription);
@@ -290,7 +309,13 @@ class AppFixtures extends Fixture
         $user3 = new User();
         $user3->setUsername('Jane');
         $user3->setEmail('jane@exemple.com');
-        $user3->setPassword('password');
+        $user3->setPassword(
+            $this->passwordHasher->hashPassword(
+                $user1,
+                "password"
+            )
+        );
+        $user3->setRoles(['ROLE_USER']);
         $user3->setAccountStatusEnum(AccountStatusEnum::ACTIVE);
         $subscription = $this->getReference('subscription_1');
         $user3->setCurrentSubscribtion($subscription);

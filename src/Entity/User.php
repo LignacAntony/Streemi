@@ -7,9 +7,11 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -61,6 +63,12 @@ class User
      */
     #[ORM\OneToMany(targetEntity: WatchHistory::class, mappedBy: 'userWatchHistory')]
     private Collection $watchHistories;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $resetToken = null;
+
+    #[ORM\Column]
+    private array $roles = [];
 
     public function __construct()
     {
@@ -277,7 +285,6 @@ class User
     public function removeMedium(WatchHistory $medium): static
     {
         if ($this->watchHistories->removeElement($medium)) {
-            // set the owning side to null (unless already changed)
             if ($medium->getUserWatchHistory() === $this) {
                 $medium->setUserWatchHistory(null);
             }
@@ -285,4 +292,35 @@ class User
 
         return $this;
     }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): static
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->roles;
+    }
+
+    public function eraseCredentials(): void {}
 }

@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html lang="fr">
+{% extends "base.html.twig" %}
+{% block title %}Streemi - Catégory XXX{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="style/style.css" rel="stylesheet">
-    <title>Streemi - Catégory XXX</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="font-montserrat text-sm bg-white " >
-<div class="flex min-h-screen  2xl:max-w-screen-2xl 2xl:mx-auto 2xl:border-x-2 2xl:border-gray-200">
-
-    {% include 'components/left_side_bar.html.twig' %}
-
+{% block content %}
     <main class=" flex-1 py-10  px-5 sm:px-10 ">
 
         <header class=" font-bold text-lg flex items-center  gap-x-3 md:hidden mb-12 ">
@@ -26,7 +13,7 @@
             <svg class="h-8 w-8 fill-red-600 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M10 15.5v-7c0-.41.47-.65.8-.4l4.67 3.5c.27.2.27.6 0 .8l-4.67 3.5c-.33.25-.8.01-.8-.4Zm11.96-4.45c.58 6.26-4.64 11.48-10.9 10.9 -4.43-.41-8.12-3.85-8.9-8.23 -.26-1.42-.19-2.78.12-4.04 .14-.58.76-.9 1.31-.7v0c.47.17.75.67.63 1.16 -.2.82-.27 1.7-.19 2.61 .37 4.04 3.89 7.25 7.95 7.26 4.79.01 8.61-4.21 7.94-9.12 -.51-3.7-3.66-6.62-7.39-6.86 -.83-.06-1.63.02-2.38.2 -.49.11-.99-.16-1.16-.64v0c-.2-.56.12-1.17.69-1.31 1.79-.43 3.75-.41 5.78.37 3.56 1.35 6.15 4.62 6.5 8.4ZM5.5 4C4.67 4 4 4.67 4 5.5 4 6.33 4.67 7 5.5 7 6.33 7 7 6.33 7 5.5 7 4.67 6.33 4 5.5 4Z"></path>
             </svg>
-            <div class="tracking-wideflex-1">MMovie<span class="text-red-600">.</span></div>
+            <div class="tracking-wideflex-1">Movie<span class="text-red-600">.</span></div>
         </header>
 
         <section>
@@ -121,7 +108,7 @@
                 {% endfor %}
 
             </ul>
-            <button class="flex flex-col items-center mt-9 w-full">
+            <button id="loadMoreMovies" class="flex flex-col items-center mt-9 w-full">
                 <a class="relative flex w-full bg-red-600 flex-row p-3 items-center justify-center rounded-lg overflow-hidden border cursor-pointer transition hover:bg-red-700 text-white">
                     <span class="font-bold mr-2">
                         <svg class="h-6 w-6" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>plus-circle</title><path d="M17,13H13V17H11V13H7V11H11V7H13V11H17M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" /></svg>
@@ -132,11 +119,22 @@
         </section>
 
     </main>
+{% endblock %}
 
-    {% include 'components/right_side_bar.html.twig' %}
+{% block scripts %}
+<script>
+    const movieList = document.getElementById('movieList');
+    const loadMoreMovies = document.getElementById('loadMoreMovies');
+    let currentPage = 1;
 
-</div>
+    loadMoreMovies.addEventListener('click', () => {
+        fetch(`{{ path('show_category_async', {id: category.id}) }}?page=${currentPage}`)
+            .then(response => response.text())
+            .then(data => {
+                movieList.insertAdjacentHTML('beforeend', data);
+                currentPage++;
+            });
+    }); 
+</script>
+{% endblock %}
 
-</body>
-
-</html>
