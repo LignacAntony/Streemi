@@ -70,6 +70,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
+    private $plainPassword;
+
     public function __construct()
     {
         $this->subscriptionHistories = new ArrayCollection();
@@ -293,6 +295,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+    public function setPlainPassword(string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+        $this->password = null;
+        return $this;
+    }
+
     public function getUserIdentifier(): string
     {
         return $this->email;
@@ -322,5 +335,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->roles;
     }
 
-    public function eraseCredentials(): void {}
+    public function eraseCredentials(): void
+    {
+        $this->plainPassword = null;
+    }
 }

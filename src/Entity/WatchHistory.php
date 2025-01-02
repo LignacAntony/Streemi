@@ -14,7 +14,8 @@ class WatchHistory
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'media')]
+    #[ORM\ManyToOne(inversedBy: 'watchHistories')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $userWatchHistory = null;
 
     #[ORM\ManyToOne(inversedBy: 'watchHistories')]
