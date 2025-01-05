@@ -92,7 +92,7 @@ class AuthController extends AbstractController
 
         $email = $request->get('_email');
         if (!$email) {
-            $this->addFlash('error', 'Utilisateur non trouvé');
+            $this->addFlash('error', 'Mail non renseigné');
             return $this->redirectToRoute('forgot_password_page_post');
         }
 
@@ -129,7 +129,7 @@ class AuthController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
 
-    #[Route('/oubli-password/{token}', name: 'reset_password')]
+    #[Route('/forgot/{token}', name: 'reset_password')]
     public function resetPass(
         string $token,
         Request $request,
